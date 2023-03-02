@@ -7,13 +7,18 @@
   <div>
     <input v-model="message" placeholder="edíteme"   @keyup.enter="di(message),letracorrect(message)" maxlength="1">
     <p>El mensaje es: {{ message }}</p>
-  </div>
+  </div>message
 
   <div>
 
   <div class="flex flex-row ">
     <div v-for="palabras in partida"  >
-       <div class="w-8 border-b-4 border-indigo-500 m-3"></div>
+       <div class="w-8 border-b-4 border-indigo-500 m-3"  >
+      
+        <p   :ref="palabras"  >
+ 
+        </p>
+       </div>
     </div>
     
   </div>
@@ -44,7 +49,14 @@
     
     ],
     palabraJu : '' ,
-    partida  : null
+    partida  : null,
+    letracorrecta : null,
+    letrasColocadas:[],
+    letrascorretas:[],
+    palabracor:[],
+    i:0,
+    ultia:"" 
+    
     
   
   
@@ -71,14 +83,29 @@
       this.items.push( {mensaje: mensje})
     },
     letracorrect: function (letra){
-
+      this.letracorrecta=null;
       this.partida.forEach(element => {
         if(letra === element){
-        alert("Please enter")
-        
+        alert(element)
+        this.letracorrecta=element;
+        this.letrasColocadas.push(element)
+         this.palabracor.push(element)
+         if(this.ultia != element){
+          this. $refs[element][0].textContent = element
+         }else{
+          alert("se repite")
+         }
+         this. $refs[element][0].textContent = element
+         this.ultia=element;
+
+
       }
+   
       });
       
+    },
+    suma: function (ii) {
+      this.i=i+ii;
     }
     }
   }
