@@ -13,11 +13,9 @@
 
   <div class="flex flex-row ">
     <div v-for="palabras in partida"  >
-       <div class="w-8 border-b-4 border-indigo-500 m-3"  >
+       <div class="w-8 border-b-4 border-indigo-500 m-3"  :ref="palabras">
       
-        <p   :ref="palabras"  >
- 
-        </p>
+
        </div>
     </div>
     
@@ -52,12 +50,15 @@ import { nextTick } from 'process'
   
     ],
     palabras: [
-      {message: 'holaaa'},
-      {message: 'hola'}
+      'holaaa',
+       'hola',
+      'ala',
+      'aalaa',
+      
     
     ],
     palabraJu : '' ,
-    partida  : null,
+    partida  : [],
     letracorrecta : null,
     letrasColocadas:[],
     letrascorretas:[],
@@ -68,7 +69,9 @@ import { nextTick } from 'process'
     elemento:null,
     html:``,
     intentos:0,
-    
+    contador:0,
+    corretas:0,
+    numero:0,
   
   
       }
@@ -80,7 +83,7 @@ import { nextTick } from 'process'
       initializeChoices: function () {
 
 
-       this.palabraJu= this.palabras[this.randon()].message
+       this.palabraJu= this.palabras[this.randon()]
 
        this.partida =this.palabraJu.split('')
        this.palabracor=this.palabraJu.split('')
@@ -100,11 +103,12 @@ import { nextTick } from 'process'
         canvas.lineTo(500, 200);
         
         canvas.stroke();
+        
 
 
       },
       randon: function () {
-  return Math.floor(Math.random() * 2);
+  return Math.floor(Math.random() * this.palabras.length);
 },
       di: function (mensje) {
       this.items.push( {mensaje: mensje})
@@ -118,13 +122,46 @@ import { nextTick } from 'process'
         alert(element)
         this.correctoInco="correcto";
         this.elemento=element;
+        this.corretas++;
          if(this.ultia != element){
           this. $refs[element][0].textContent = element
-         }else{
-          alert("se repite")
-          this.palabracor.slice( this.palabracor.indexOf(element), 1)
+         }else if(letra== this.ultia &&this.contador <=0){
+          alert("se repite 2")
+          this. $refs[element][1].textContent = element
+          delete(this.palabracor[this.palabracor.indexOf(element)])
+          this.contador++;
+          console.log(this.contador)
+
          }
-      
+         else if(this.contador > 0 && this.contador <=1){
+          alert("se repite 3")
+          this. $refs[element][1].textContenintentost = element
+          this. $refs[element][2].textContent = element
+  
+          this.contador++;
+          console.log(this.contador)
+         }
+         else if(this.contador > 1){
+          alert("se repite 4")
+          this. $refs[element][1].textContent = element
+          this. $refs[element][2].textContent = element
+          this. $refs[element][3].textContent = element
+          
+         }
+
+
+         if(this.corretas >= this.partida.length){
+          alert("se acaba el juego")
+
+          this.numero=this.palabras.indexOf(this.palabraJu ) 
+          
+          delete(this.palabras[this.numero])
+          console.log( this.palabras)
+          this.initializeChoices();
+          
+
+         }
+
          this. $refs[element][0].textContent = element
          this.palabracor.slice( this.palabracor.indexOf(element), 1)
          this.ultia=element;
