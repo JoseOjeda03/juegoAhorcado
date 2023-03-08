@@ -13,8 +13,8 @@
 
   <div class="flex flex-row ">
     <div v-for="palabras in partida"  >
-       <div class="w-8 border-b-4 border-indigo-500 m-3"  :ref="palabras">
-      
+       <div class="w-8 border-b-4 border-indigo-500 m-3"  >
+        <p v-html=html :ref="palabras"></p>
 
        </div>
     </div>
@@ -53,7 +53,7 @@ import { nextTick } from 'process'
       'holaaa',
        'hola',
       'ala',
-      'aalaa',
+      'ooloo',
       
     
     ],
@@ -65,13 +65,16 @@ import { nextTick } from 'process'
     palabracor:[],
     i:0,
     ultia:"",
+    ulmimas:"",
     correctoInco:"",
     elemento:null,
-    html:``,
+    html:null,
     intentos:0,
     contador:0,
+    contadors:0,
     corretas:0,
     numero:0,
+    borrar:0,
   
   
       }
@@ -81,12 +84,17 @@ import { nextTick } from 'process'
   },
     methods: {
       initializeChoices: function () {
+        this.limpar();
 
+       
 
        this.palabraJu= this.palabras[this.randon()]
 
        this.partida =this.palabraJu.split('')
        this.palabracor=this.palabraJu.split('')
+       console.log(this.partida)
+
+
        this.$refs.canvas.height = 800;
         this.$refs.canvas.width =800;
         const canvas = this.$refs.canvas.getContext('2d') 
@@ -119,53 +127,30 @@ import { nextTick } from 'process'
       this.palabracor.forEach(element => {
         if(letra === element){
          
-        alert(element)
+
         this.correctoInco="correcto";
         this.elemento=element;
         this.corretas++;
          if(this.ultia != element){
-          this. $refs[element][0].textContent = element
-         }else if(letra== this.ultia &&this.contador <=0){
-          alert("se repite 2")
-          this. $refs[element][1].textContent = element
-          delete(this.palabracor[this.palabracor.indexOf(element)])
+          
+          this.contador=0;
+        }
+        else{
           this.contador++;
-          console.log(this.contador)
-
-         }
-         else if(this.contador > 0 && this.contador <=1){
-          alert("se repite 3")
-          this. $refs[element][1].textContenintentost = element
-          this. $refs[element][2].textContent = element
-  
-          this.contador++;
-          console.log(this.contador)
-         }
-         else if(this.contador > 1){
-          alert("se repite 4")
-          this. $refs[element][1].textContent = element
-          this. $refs[element][2].textContent = element
-          this. $refs[element][3].textContent = element
-          
-         }
+        }
+        this.borrar=this.contador
+        console.log(this.contador)
+        this. $refs[element][this.contador].textContent = element
+         
+         
 
 
-         if(this.corretas >= this.partida.length){
-          alert("se acaba el juego")
 
-          this.numero=this.palabras.indexOf(this.palabraJu ) 
-          
-          delete(this.palabras[this.numero])
-          console.log( this.palabras)
-          this.initializeChoices();
-          
 
-         }
 
-         this. $refs[element][0].textContent = element
-         this.palabracor.slice( this.palabracor.indexOf(element), 1)
+
          this.ultia=element;
-         console.log(this.palabracor)
+         console.log(this.palabras)
          
       }
 
@@ -176,6 +161,34 @@ import { nextTick } from 'process'
 
 
       });
+      if(this.corretas >= this.partida.length){
+          alert("se acaba el juego")
+
+          this.numero=this.palabras.indexOf(this.palabraJu ) 
+          
+          const filteredLibraries =this.palabras.filter((item) => item !== this.palabraJu)
+          this.palabras=filteredLibraries;
+          console.log( this.palabras)
+          this.partida.forEach(elemetos => {
+            if(this.ulmimas != elemetos){
+          
+          this.contadors=0;
+        }
+        else{
+          this.contadors++;
+        }
+        console.log(this.contadors)
+            this. $refs[elemetos][this.contadors].textContent = ""
+           this.ulmimas=elemetos;
+          });
+
+          this.contador=0;
+          
+          this.initializeChoices();
+          
+
+         }
+      this.contador=0;
 
       if (this.correctoInco==="correcto"){
         this.letracorrecta=this.elemento;
@@ -256,6 +269,28 @@ if (this.intentos>4){
            
  
       });
+    },
+    limpar: function (){
+      console.log("hola"+ this.borrar)
+
+
+    
+      this.palabraJu ='' ;
+      this.partida  = [];
+      this.letracorrecta = null;
+      this.letrasColocadas=[];
+      this.letrascorretas=[];
+      this.palabracor=[];
+      this. i=0;
+      this.ultia=null;
+      this.ulmimas=null;
+      this.correctoInco="";
+      this.elemento=null;
+      this.html=null;
+      this.intentos=0;
+      this.contador=0;
+      this.corretas=0;
+      this.numero=0;
     }
     }
   }
