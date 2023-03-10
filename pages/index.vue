@@ -1,52 +1,78 @@
 <template>
-<div>
-  <h1 class="text-red-700">
-    Juego del Ahorcado
-  </h1>
-  
-  <div>
-    <input v-model="message" placeholder="edíteme"  ref="input" @keyup.enter="di(message),validar(message)" maxlength="1">
-    <p>El mensaje es: {{ message }}</p>
-  </div>
+<div class="flex flex-row  justify-between bg-[url('~/img/nube.png')] bg-cover w-screen h-screen">
 
-  <div>
+  <div class="">
 
-  <div class="flex flex-row ">
-    <div v-for="palabras in partida"  >
-       <div class="w-8 border-b-4 border-indigo-500 m-3" ref="contenr"  >
-        <p ref="value" :ref="palabras"     >
-        
-        {{  }}</p>
-
-       </div>
-    </div>
     
+    <div class="flex flex-col grid justify-items-center w-[70rem]  ">
+      <h1 class="text-red-700 text-4xl mb-16">
+        Juego del Ahorcado
+      </h1>
+      <input class="border border-black" v-model="message" placeholder="edíteme"  ref="input" @keyup.enter="di(message),validar(message)" maxlength="1">
+      <p class="text-lg ">El la letra es: {{ message }}</p>
+      descarga.png
+    </div>
+  
+    <div>
+  
+    <div class="flex flex-row ">
+      <div v-for="palabras in partida"  >
+         <div class="w-16 border-b-4 border-red-500 m-6 grid justify-items-center" ref="contenr"  >
+          <p class="text-xl" ref="value" :ref="palabras"     >
+          
+          {{  }}</p>
+  
+         </div>
+      </div>
+      
+    </div>
+  
+  
+    </div>
+      <p>{{partida}}</p>
+     
+      <div class="grid justify-items-center">
+        <h1 class="text-red-600 text-2xl mb-16">HISTORIAL</h1>
+        <div class="border-solid border-2 border-indigo-600 w-[50rem] h-[20rem] flex flex-row">
+          <div class="mr-3  w-16" v-for="histo in historial">
+            <p class="bg-[url('~/img/sisi.jpg)]">
+              {{ histo +"," }}
+            </p>
+            
+
+
+      </div>
+
+        </div>
+
+      </div>
   </div>
+  
 
-
-  </div>
-    <p>{{partida}}</p>
-    <div class="border-l-4 border-indigo-500" ></div>
-
- <div>
-  <canvas  class=""      ref="canvas" >
+ <div class="flex flex-row-reverse " >
+  <canvas  class="bg-[url('~/img/lol.jpg')] bg-cover"     ref="canvas" >
   </canvas>
  </div>
 
+
+<Modal v-show="showModal" @close-modal="showModal = false" />
+<ModalB v-show="showModalB" @close-modal="showModalB = false" />
 </div>
 
 
 </template>
 <script>
-
+import Modal from '~/components/modal.vue'
+import ModalB from '~/components/modalB.vue'
 
   export default {
 
-
+    components: { Modal ,ModalB,},
     
 
     data(){
       return {
+        showModalB:false,
         message: '',
         items: [
   
@@ -64,7 +90,7 @@
     partida  : [],
     letracorrecta : null,
     letrasColocadas:[],
-    letrascorretas:[],
+    historial:[],
     palabracor:[],
     i:0,
     ultia:"",
@@ -98,14 +124,15 @@
        console.log(this.partida)
 
 
-       this.$refs.canvas.height = 800;
+       this.$refs.canvas.height = 750;
         this.$refs.canvas.width =800;
         const canvas = this.$refs.canvas.getContext('2d') 
         console.log(canvas)
   
         canvas.beginPath();
         canvas.fillStyle = "Red";
-        canvas.strokeStyle = "red";
+        canvas.strokeStyle = "black";
+        canvas.lineWidth=10
         canvas.moveTo(700, 700);
         canvas.lineTo(100, 700);
         canvas.moveTo(200, 700);
@@ -172,7 +199,7 @@
     letracorrect: function (letra){
       console.log(this.esta(letra))
       this.letracorrecta=null;
-
+      this.historial.push(letra);
       this.palabracor.forEach(element => {
         
         if(letra === element){
@@ -211,7 +238,7 @@
 
 
       });
-
+      this.$refs.input.value="" 
       this.contador=0;
 
       if (this.correctoInco==="correcto"){
@@ -257,7 +284,8 @@
           });
 
           this.contador=0;
-          alert("se acaba el juego")
+          this.showModalB=true;
+          this.message=""
           this.initializeChoices();
           
         
@@ -273,6 +301,7 @@
       this.$refs.input.value="" 
       this.correctoInco=""
     },
+ 
     suma: function (ii) {
       this.i=i+ii;
     },
@@ -281,7 +310,8 @@
     
           const canvas = this.$refs.canvas.getContext('2d') 
           canvas.beginPath();
-
+          canvas.strokeStyle = "red";
+          canvas.lineWidth=5
           canvas.arc(500, 250, 50, 0, Math.PI * 2, true); 
           canvas.stroke();
 
@@ -290,6 +320,8 @@
     
     const canvas = this.$refs.canvas.getContext('2d') 
     canvas.beginPath();
+    canvas.strokeStyle = "red";
+          canvas.lineWidth=5
     canvas.moveTo(500, 500);
     canvas.lineTo(500, 300);
     canvas.stroke();
@@ -299,6 +331,8 @@ if (this.intentos>2){
     
     const canvas = this.$refs.canvas.getContext('2d') 
     canvas.beginPath();
+    canvas.strokeStyle = "red";
+    canvas.lineWidth=5
     canvas.moveTo(500, 500);
     canvas.lineTo(400, 600);
     canvas.stroke();
@@ -308,6 +342,8 @@ if (this.intentos>3){
     
     const canvas = this.$refs.canvas.getContext('2d') 
     canvas.beginPath();
+    canvas.strokeStyle = "red";
+    canvas.lineWidth=5
     canvas.moveTo(500, 500);
     canvas.lineTo(600, 600);
     canvas.stroke();
@@ -317,18 +353,28 @@ if (this.intentos>4){
     
     const canvas = this.$refs.canvas.getContext('2d') 
     canvas.beginPath();
+    canvas.strokeStyle = "red";
+    canvas.lineWidth=5
     canvas.moveTo(500, 350);
     canvas.lineTo(400, 400);
     canvas.stroke();
 
 }
-if (this.intentos>4){
+if (this.intentos>5){
     
     const canvas = this.$refs.canvas.getContext('2d') 
     canvas.beginPath();
+    canvas.strokeStyle = "red";
+    canvas.lineWidth=5
     canvas.moveTo(500, 350);
     canvas.lineTo(600, 400);
     canvas.stroke();
+    this.showModal = true;
+
+    
+     
+    
+
 
 }
     },
@@ -342,7 +388,7 @@ if (this.intentos>4){
       console.log("hola"+ this.borrar)
 
       
-      
+      this.historial=[]
       this.$refs.input.value="" 
       this.palabraJu ='' ;
    
@@ -367,7 +413,60 @@ if (this.intentos>4){
 
 </script>
 <style>
-canvas { background: #eee; display: block; margin: 0 auto; border: 1px solid black; }
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  background-color: #000000da;
+}
+
+.modal {
+  text-align: center;
+  background-color: white;
+  height: 500px;
+  width: 500px;
+  margin-top: 10%;
+  padding: 60px 0;
+  border-radius: 20px;
+}
+.close {
+  margin: 10% 0 0 16px;
+  cursor: pointer;
+}
+
+.close-img {
+  width: 25px;
+}
+
+.check {
+  width: 150px;
+}
+
+h6 {
+  font-weight: 500;
+  font-size: 28px;
+  margin: 20px 0;
+}
+
+p {
+  font-size: 16px;
+  margin: 20px 0;
+}
+
+button {
+  background-color: #ac003e;
+  width: 150px;
+  height: 40px;
+  color: white;
+  font-size: 14px;
+  border-radius: 16px;
+  margin-top: 50px;
+}
+canvas {  display: block; border: 1px solid black; }
 </style>
 
 
