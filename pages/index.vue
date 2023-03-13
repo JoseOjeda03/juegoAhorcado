@@ -34,7 +34,7 @@
       <div class="grid justify-items-center">
         <h1 class="text-red-600 text-2xl mb-16">HISTORIAL</h1>
         <div class="border-solid border-2 border-indigo-600 w-[50rem] h-[20rem] flex flex-row">
-          <div class="mr-3  w-16" v-for="histo in historial">
+          <div class="mr-6  " v-for="histo in historial">
             <p class="bg-[url('~/img/sisi.jpg)]">
               {{ histo +"," }}
             </p>
@@ -79,6 +79,33 @@ import ModalB from '~/components/modalB.vue'
     ],
     nul:"",
     palabras: [
+      'ethernet',
+      'website',
+      'internet',
+      'online',
+      'procesador',
+      'ssd',
+      'antivirus',
+      'aplicacion',
+      'autoeditar',
+      'banco',
+      'base',
+      'buzón',
+      'vaca',
+      'venado',
+      'perro',
+      'delfin',
+      'gato',
+      'leon',
+      'elefante',
+      'pato',
+      'hipopotamo',
+      'leopardo',
+      'rinoceronte',
+      'ballena',
+      'chimpance',
+      'chimpance',
+      'jirafa',
       'holaaa',
        'hola',
       'ala',
@@ -104,6 +131,8 @@ import ModalB from '~/components/modalB.vue'
     corretas:0,
     numero:0,
     borrar:0,
+    k:0,
+    l:0,
   
   
       }
@@ -163,6 +192,15 @@ import ModalB from '~/components/modalB.vue'
           return conten
       })
     },
+    vacio: function(lete){
+      var resultado= false;
+      if(lete == ""){
+            resultado= true;
+          }else{
+            resultado=  false
+          }
+          return resultado;
+    },
     esta: function (lete){
       var resultado= false;
         this.letrasColocadas.forEach(elem =>
@@ -178,9 +216,16 @@ import ModalB from '~/components/modalB.vue'
     },
     validar: function(letra){
 
+        do{  
+           letra=this.message
+          if(this.vacio(letra)){
+            alert("repita la letra que esta vacia ")
+       
+          this.message="";  
+          break;
+          }else{
+            do{
 
-        do{
-          letra=this.message
           if(this.esta(letra)){
           alert("repita el valor que la letra ya esta colocada")
           this.$refs.input.value="" 
@@ -194,6 +239,11 @@ import ModalB from '~/components/modalB.vue'
             letra=""
           }
         } while(this.k !=1)
+        this.l=1;
+          }
+        
+        }while(this.l !=1)
+       
 
     },
     letracorrect: function (letra){
@@ -298,7 +348,7 @@ import ModalB from '~/components/modalB.vue'
         this.dibujar()
 
       }
-      this.$refs.input.value="" 
+      this.message="" 
       this.correctoInco=""
     },
  
