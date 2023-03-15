@@ -8,9 +8,9 @@
       <h1 class="text-red-700 text-4xl mb-16">
         Juego del Ahorcado
       </h1>
-      <input class="border border-black" v-model="message" placeholder="edíteme"  ref="input" @keyup.enter="di(message),validar(message)" maxlength="1">
+      <input class="border border-black" v-model="message" :disabled="disabled==1" placeholder="edíteme"  ref="input" @keyup.enter="di(message),validar(message)" maxlength="1">
       <p class="text-lg ">El la letra es: {{ message }}</p>
-      descarga.png
+
     </div>
   
     <div>
@@ -18,9 +18,9 @@
     <div class="flex flex-row ">
       <div v-for="palabras in partida"  >
          <div class="w-16 border-b-4 border-red-500 m-6 grid justify-items-center" ref="contenr"  >
-          <p class="text-xl" ref="value" :ref="palabras"     >
+          <p class="text-xl" ref="letras" :ref="palabras"     >
           
-          {{  }}</p>
+          </p>
   
          </div>
       </div>
@@ -55,8 +55,8 @@
  </div>
 
 
-<Modal v-show="showModal" @close-modal="showModal = false" />
-<ModalB v-show="showModalB" @close-modal="showModalB = false" />
+<Modal v-show="showModal" v-model="finalJugar" @close-modal="showModal = false" @final=" finalJugar=palabraJu " />
+<ModalB v-show="showModalB" @close-modal="showModalB = false" @inicio=" initializeChoices()  " />
 </div>
 
 
@@ -72,6 +72,7 @@ import ModalB from '~/components/modalB.vue'
 
     data(){
       return {
+        disabled:0,
         showModalB:false,
         message: '',
         items: [
@@ -79,18 +80,14 @@ import ModalB from '~/components/modalB.vue'
     ],
     nul:"",
     palabras: [
-      'ethernet',
+      
       'website',
       'internet',
       'online',
-      'procesador',
       'ssd',
-      'antivirus',
-      'aplicacion',
-      'autoeditar',
       'banco',
       'base',
-      'buzón',
+      'buzon',
       'vaca',
       'venado',
       'perro',
@@ -99,12 +96,8 @@ import ModalB from '~/components/modalB.vue'
       'leon',
       'elefante',
       'pato',
-      'hipopotamo',
       'leopardo',
-      'rinoceronte',
       'ballena',
-      'chimpance',
-      'chimpance',
       'jirafa',
       'holaaa',
        'hola',
@@ -180,18 +173,7 @@ import ModalB from '~/components/modalB.vue'
       di: function (mensje) {
       this.items.push( {mensaje: mensje})
     },
-    repetidas: function(lettras){
-      let conten=0;
-      this.palabracor.forEach(elen=> {
-          if(lettras !=elen ){
-            conten=0;
-          }
-          else{
-            conten++;
-          }
-          return conten
-      })
-    },
+    
     vacio: function(lete){
       var resultado= false;
       if(lete == ""){
@@ -203,7 +185,7 @@ import ModalB from '~/components/modalB.vue'
     },
     esta: function (lete){
       var resultado= false;
-        this.letrasColocadas.forEach(elem =>
+        this.historial.forEach(elem =>
         {
           if(elem == lete){
             resultado= true;
@@ -217,7 +199,7 @@ import ModalB from '~/components/modalB.vue'
     validar: function(letra){
 
         do{  
-           letra=this.message
+           letra=this.message.toLowerCase()
           if(this.vacio(letra)){
             alert("repita la letra que esta vacia ")
        
@@ -243,8 +225,6 @@ import ModalB from '~/components/modalB.vue'
           }
         
         }while(this.l !=1)
-       
-
     },
     letracorrect: function (letra){
       console.log(this.esta(letra))
@@ -253,7 +233,6 @@ import ModalB from '~/components/modalB.vue'
       this.palabracor.forEach(element => {
         
         if(letra === element){
-         
          
         this.correctoInco="correcto";
         this.elemento=element;
@@ -269,24 +248,10 @@ import ModalB from '~/components/modalB.vue'
         console.log(this.contador)
         this. $refs[element][this.contador].textContent = element
          
-         
-
-
-
-
-
-
          this.ultia=element;
          console.log(this.palabras)
          
       }
-
-      
-      
-        
-
-
-
       });
       this.$refs.input.value="" 
       this.contador=0;
@@ -296,51 +261,8 @@ import ModalB from '~/components/modalB.vue'
         this.letrasColocadas.push(this.elemento)
         console.log(this.letrasColocadas)
         alert( this.correctoInco)
-
-        if(this.corretas >= this.partida.length){
-
-
-          this.numero=this.palabras.indexOf(this.palabraJu ) 
-          this.$refs.input.value="" 
-          
-          const filteredLibraries =this.palabras.filter((item) => item !== this.palabraJu)
-          this.palabras=filteredLibraries;
-          console.log( this.palabras)
-          this.palabracor.forEach(elemetos => {
-            if(this.ulmimas != elemetos){
-          
-          this.contadors=0;
-        }
-        else{
-          this.contadors++;
-        }
-        console.log(this.contadors)
-            this. $refs[elemetos][this.contadors].textContent = ""
-
-           this.ulmimas=elemetos;
-          });
-                    this.palabracor.forEach(elemetos => {
-            if(this.ulmimas != elemetos){
-          
-          this.contadors=0;
-        }
-        else{
-          this.contadors++;
-        }
-        console.log(this.contadors)
-            this. $refs[elemetos][this.contadors].textContent = ""
-
-           this.ulmimas=elemetos;
-          });
-
-          this.contador=0;
-          this.showModalB=true;
-          this.message=""
-          this.initializeChoices();
-          
-        
-
-         }
+       
+        this.ganar();
       }else{
         this.intentos++;
 
@@ -351,9 +273,52 @@ import ModalB from '~/components/modalB.vue'
       this.message="" 
       this.correctoInco=""
     },
- 
-    suma: function (ii) {
-      this.i=i+ii;
+    ganar: function(){
+
+      if(this.corretas >= this.partida.length){
+
+
+        this.numero=this.palabras.indexOf(this.palabraJu ) 
+        this.$refs.input.value="" 
+
+        const filteredLibraries =this.palabras.filter((item) => item !== this.palabraJu)
+        this.palabras=filteredLibraries;
+        console.log( this.palabras)
+        this.borrarpa();
+      
+        
+
+
+          this.contador=0;
+          this.showModalB=true;
+          this.message=""
+          this.disabled=(this.disabled + 1) % 2
+}
+    },
+    borrarpa: function(){
+      this.palabracor.forEach(element => {
+
+         if(this.ultia != element){
+          
+          this.contador=0;
+        }
+        else{
+          this.contador++;
+        }
+        this.borrar=this.contador
+        console.log(this.contador)
+        this. $refs[element][this.contador].textContent = ""
+         
+         this.ultia=element;
+         console.log(this.palabras)
+         
+      
+      });
+      this.$refs.input.value="" 
+      this.contador=0;
+
+
+
     },
     dibujar: function(){
       if (this.intentos>0){
@@ -419,6 +384,7 @@ if (this.intentos>5){
     canvas.moveTo(500, 350);
     canvas.lineTo(600, 400);
     canvas.stroke();
+    this.disabled=(this.disabled + 1) % 2
     this.showModal = true;
 
     
@@ -428,42 +394,41 @@ if (this.intentos>5){
 
 }
     },
-    colocar: function (){
-      this.palabracor.forEach(element => {
-           
- 
-      });
-    },
     limpar: function (){
       console.log("hola"+ this.borrar)
+      this.disabled=0
+      this.showModalB=false
+      this.message= ''
+      this.items=[]
+      this.nul=""
 
-      
+      this.palabraJu = '' 
+      this.partida  = []
+      this.letracorrecta = null
+      this.letrasColocadas=[]
       this.historial=[]
-      this.$refs.input.value="" 
-      this.palabraJu ='' ;
-   
-      this.partida  = [];
-      this.letracorrecta = null;
-      this.letrasColocadas=[];
-      this.letrascorretas=[];
-      this.palabracor=[];
-      this. i=0;
-      this.ultia=null;
-      this.ulmimas=null;
-      this.correctoInco="";
-      this.elemento=null;
-      this.html=null;
-      this.intentos=0;
-      this.contador=0;
-      this.corretas=0;
-      this.numero=0;
+      this.palabracor=[]
+      this.i=0
+      this.ultia=""
+      this.ulmimas=""
+      this.correctoInco=""
+      this.elemento=null
+      this.html=null
+      this.intentos=0
+      this.contador=0
+      this.contadors=0
+      this.corretas=0
+      this.numero=0
+      this.borrar=0
+      this.k=0
+      this.l=0
     }
     }
   }
 
 </script>
 <style>
-.modal-overlay {
+.modal-styles {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -487,10 +452,7 @@ if (this.intentos>5){
   margin: 10% 0 0 16px;
   cursor: pointer;
 }
-
-.close-img {
-  width: 25px;
-}
+  
 
 .check {
   width: 150px;
